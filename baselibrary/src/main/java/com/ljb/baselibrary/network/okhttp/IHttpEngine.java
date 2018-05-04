@@ -2,8 +2,8 @@ package com.ljb.baselibrary.network.okhttp;
 
 import android.content.Context;
 
-import com.ljb.baselibrary.network.callback.EngineCallBack;
-import com.ljb.baselibrary.network.callback.UploadCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.EngineCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 
 import java.util.Map;
 

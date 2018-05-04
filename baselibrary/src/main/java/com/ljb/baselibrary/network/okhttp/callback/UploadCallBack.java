@@ -1,4 +1,4 @@
-package com.ljb.baselibrary.network.callback;
+package com.ljb.baselibrary.network.okhttp.callback;
 
 import okhttp3.Response;
 

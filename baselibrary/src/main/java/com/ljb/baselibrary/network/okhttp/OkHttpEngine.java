@@ -5,10 +5,10 @@ import android.util.Log;
 
 import com.ljb.baselibrary.network.Utils.AndroidPlatform;
 import com.ljb.baselibrary.network.Utils.NetUtils;
-import com.ljb.baselibrary.network.callback.DownCallBack;
-import com.ljb.baselibrary.network.callback.EngineCallBack;
-import com.ljb.baselibrary.network.callback.UploadCallBack;
-import com.ljb.baselibrary.network.error.ServiceError;
+import com.ljb.baselibrary.network.exception.ApiException;
+import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.EngineCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.CacheControl;
 import okhttp3.Call;
@@ -46,6 +47,7 @@ class OkHttpEngine implements IHttpEngine {
 
     static {
         mOkHttpClient = new OkHttpClient.Builder()//
+
                 .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                     @Override
                     public void log(String message) {
@@ -127,12 +129,11 @@ class OkHttpEngine implements IHttpEngine {
             mAndroidPlatform.defaultCallbackExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
-                    callBack.onError(new ServiceError("网络请求异常: code: " + response.code()));
+                    callBack.onError(new ApiException("网络请求异常: code: " + response.code()));
                 }
             });
         }
     }
-
 
 
     @Override
@@ -250,7 +251,7 @@ class OkHttpEngine implements IHttpEngine {
                                 callBack.onError(e);
                             }
                         } else {
-                            callBack.onError(new ServiceError("网络请求异常: code: " + response.code()));
+                            callBack.onError(new ApiException("网络请求异常: code: " + response.code()));
                         }
 
                     }
@@ -259,6 +260,7 @@ class OkHttpEngine implements IHttpEngine {
         });
 
     }
+
     /**
      * 构建一个Request
      *
@@ -282,9 +284,11 @@ class OkHttpEngine implements IHttpEngine {
                     .cacheControl(control)//
                     .build();
         } else { // 需要缓存
-            if (cacheControl == null) { //如果用户没有定制缓存策略，则设置成永久
+            if (cacheControl == null) { // 用户设置要缓存，然后又没有给缓存策略，则策列设置 max  = 0
                 request = builder//
-                        .cacheControl(CacheControl.FORCE_CACHE)//
+                        .cacheControl(new CacheControl.Builder()//
+                                .maxAge(0, TimeUnit.SECONDS)//
+                                .build())//
                         .build();
             } else {
                 request = builder//

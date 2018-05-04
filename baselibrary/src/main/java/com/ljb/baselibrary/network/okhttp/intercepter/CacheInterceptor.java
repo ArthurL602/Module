@@ -15,33 +15,23 @@ import okhttp3.Response;
 /**
  * Author      :meloon
  * Date        :2018/5/3
- * Description :
+ * Description : addInterceptor中的拦截器，有网无网都会走
  */
 
 public class CacheInterceptor implements Interceptor {
     private Context mContext;
-    private int max_age;
-    private int max_stale;
-
-
-    public CacheInterceptor(Context context, int max_age, int max_stale) {
+    public CacheInterceptor(Context context) {
         mContext = context;
-        this.max_age = max_age;
-        this.max_stale = max_stale;
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         if (NetUtils.isNetWork(mContext)) {// 如果有网络|
-            Request request = chain.request();
-            return chain.proceed(request).newBuilder()//
-                    .removeHeader("Pragma")//
-                    .removeHeader("Cache-Control")//
-                    .header("Cache-Control", "public,max-age=" + max_age)//单位秒
-                    .build();
+            return chain.proceed(chain.request());
         } else {
+            int maxStale = chain.request().cacheControl().maxStaleSeconds();
             CacheControl cacheControl = new CacheControl.Builder()//
-                    .maxStale(max_stale, TimeUnit.SECONDS)//
+                    .maxStale(maxStale, TimeUnit.SECONDS)//
                     .build();
             Request request = chain.request().newBuilder()//
                     .cacheControl(cacheControl)//

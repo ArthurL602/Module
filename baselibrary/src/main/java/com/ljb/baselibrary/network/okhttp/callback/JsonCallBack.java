@@ -1,9 +1,9 @@
-package com.ljb.baselibrary.network.callback;
+package com.ljb.baselibrary.network.okhttp.callback;
 
 import com.google.gson.Gson;
 import com.ljb.baselibrary.network.Utils.NetUtils;
 import com.ljb.baselibrary.network.bean.BaseResult;
-import com.ljb.baselibrary.network.error.ServiceError;
+import com.ljb.baselibrary.network.exception.ApiException;
 
 import okhttp3.Response;
 
@@ -25,7 +25,7 @@ public abstract class JsonCallBack<T> extends EngineCallBack<BaseResult<T>> {
             onSuccessful(t);
             return baseResult;
         }
-        onError(new ServiceError("后台数据返回错误： code: " + baseResult.getCode()));
+        onError(new ApiException("后台数据返回错误： code: " + baseResult.getCode()));
         return null;
     }
 

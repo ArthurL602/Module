@@ -2,8 +2,8 @@ package com.ljb.baselibrary.network.okhttp;
 
 import android.content.Context;
 
-import com.ljb.baselibrary.network.callback.EngineCallBack;
-import com.ljb.baselibrary.network.callback.UploadCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.EngineCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,6 @@ public class HttpUtils {
     public static final int TYPE_GET = 0X0012;
     public static final int TYPE_POST_OTHER = 0X0013;
     public static final int TYPE_POST_FILE = 0X0014;
-    public static final int TYPE_DOWN_FILE = 0X0015;
 
     private Context mContext;
 
@@ -72,16 +71,6 @@ public class HttpUtils {
      */
     public HttpUtils postFile() {
         mType = TYPE_POST_FILE;
-        return this;
-    }
-
-    /**
-     * 下载文件
-     *
-     * @return
-     */
-    public HttpUtils downFile() {
-        mType = TYPE_DOWN_FILE;
         return this;
     }
 

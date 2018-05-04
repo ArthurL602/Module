@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
-import com.ljb.baselibrary.network.callback.UploadCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 
 import java.io.IOException;
 
@@ -53,7 +53,6 @@ public class ExMultipartBody extends RequestBody {
         mBufferedSink = Okio.buffer(sink(sink));
         mRequestBody.writeTo(mBufferedSink);
         mBufferedSink.flush();
-
     }
 
     private Sink sink(BufferedSink sink) {

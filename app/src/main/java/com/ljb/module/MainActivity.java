@@ -5,10 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.ljb.baselibrary.network.callback.DownCallBack;
-import com.ljb.baselibrary.network.callback.UploadCallBack;
 import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
 import com.ljb.baselibrary.network.okhttp.HttpUtils;
+import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.JsonCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
+import com.ljb.baselibrary.network.okhttp.intercepter.CacheInterceptor;
+import com.ljb.baselibrary.network.okhttp.intercepter.NetWorkCacheInterceptor;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +19,10 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -25,10 +31,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class MainActivity extends AppCompatActivity {
-    //    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
-    private String url = "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk";
+    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
+    //    private String url = "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk";
     //    private String url = "http://pic1.win4000.com/wallpaper/e/584a7f69e9d4d.jpg";
     private String url2 = "https://api.saiwuquan.com/api/upload";
 
@@ -38,33 +45,90 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
-        Map<String, Object> map = new HashMap<>();
-        File file = new File("data/app/", "com.kingroot.kinguser-1.apk");
-        map.put("file", file);
-        HttpUtils.with(this).url(url).client(new OkHttpClient()).execute(new DownCallBack(getCacheDir().getAbsolutePath() + "/a.apk", 2048) {
-            @Override
-            public void before(long total) {
-                Log.e("TAG", "before: " + total + "  "+Thread.currentThread().getName());
-            }
+//
+//        RxHttp.with().create(ApiService.class)//
+//                .login("Ljb")//
+//                .compose(RxHelper.<UserInfo>transformer())//
+//                .subscribe(new RxJsonObserver<UserInfo>() {
+//
+//                    @Override
+//                    public void error(Throwable e) {
+//                        Log.e("TAG", "error: " + e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void success(UserInfo userInfo) {
+//                        Log.e("TAG", "success: " + userInfo.toString());
+//                    }
+//                });
 
-            @Override
-            public void downing(long total, long current) {
-                Log.e("TAG", "downing: "+current+ "  "+Thread.currentThread().getName());
-                tv.setText(current+"/"+total);
-            }
+//        c(tv);
+//        b(file);
+//        a(map);
+        d();
+    }
 
+    private void d() {
+        CacheControl cacheControl = new CacheControl.Builder()//
+                .maxAge(10, TimeUnit.SECONDS)//
+                .maxStale(60,TimeUnit.SECONDS)//
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()//
+                .cache(new Cache(getCacheDir(), 1024 * 1024810))//
+                .addInterceptor(new CacheInterceptor(this))//
+                .addNetworkInterceptor(new NetWorkCacheInterceptor(this))//
+                .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                    @Override
+                    public void log(String message) {
+                        Log.e("TAG", message);
+                    }
+                }).setLevel(HttpLoggingInterceptor.Level.BODY))
+
+                .build();
+
+        HttpUtils.with(this).client(okHttpClient).isCache(true).cacheControl(cacheControl).get().url(url).addParam
+                ("userName", "Ljb").execute(new JsonCallBack<UserInfo>() {
             @Override
-            public void complete() {
-                Log.e("TAG", "complete: "+ "  "+Thread.currentThread().getName());
+            public void onSuccessful(UserInfo userInfo) {
+                Log.e("TAG", "onSuccessful: " + userInfo.toString());
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e("TAG", "onError: "+ "  "+Thread.currentThread().getName());
+
             }
         });
-//        b(file);
-//        a(map);
+
+
+    }
+
+    private void c(final TextView tv) {
+        Map<String, Object> map = new HashMap<>();
+        File file = new File("data/app/", "com.kingroot.kinguser-1.apk");
+        map.put("file", file);
+        HttpUtils.with(this).url(url).client(new OkHttpClient()).execute(new DownCallBack(getCacheDir()
+                .getAbsolutePath() + "/a.apk", 2048) {
+            @Override
+            public void before(long total) {
+                Log.e("TAG", "before: " + total + "  " + Thread.currentThread().getName());
+            }
+
+            @Override
+            public void downing(long total, long current) {
+                Log.e("TAG", "downing: " + current + "  " + Thread.currentThread().getName());
+                tv.setText(current + "/" + total);
+            }
+
+            @Override
+            public void complete() {
+                Log.e("TAG", "complete: " + "  " + Thread.currentThread().getName());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("TAG", "onError: " + "  " + Thread.currentThread().getName());
+            }
+        });
     }
 
     private void b(File file) {
