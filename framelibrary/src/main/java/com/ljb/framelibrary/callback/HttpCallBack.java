@@ -3,8 +3,8 @@ package com.ljb.framelibrary.callback;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.ljb.baselibrary.http.EngineCallBack;
-import com.ljb.baselibrary.http.HttpUtils;
+import com.ljb.baselibrary.network.callback.EngineCallBack;
+import com.ljb.baselibrary.network.okhttp.HttpUtils;
 
 import java.util.Map;
 
