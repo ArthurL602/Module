@@ -16,10 +16,10 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class RxHelper {
-    public static <T> ObservableTransformer<BaseResult<T>, BaseResult<T>> transformer() {
-        return new ObservableTransformer<BaseResult<T>, BaseResult<T>>() {
+    public static <T> ObservableTransformer<T, T> transformer() {
+        return new ObservableTransformer<T,T>() {
             @Override
-            public ObservableSource<BaseResult<T>> apply(@NonNull Observable<BaseResult<T>> upstream) {
+            public ObservableSource<T> apply(@NonNull Observable<T> upstream) {
                 return upstream.subscribeOn(Schedulers.io())//
                         .unsubscribeOn(Schedulers.io())//
                         .observeOn(AndroidSchedulers.mainThread())//

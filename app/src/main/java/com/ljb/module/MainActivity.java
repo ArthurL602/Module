@@ -12,6 +12,8 @@ import com.ljb.baselibrary.network.okhttp.callback.JsonCallBack;
 import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 import com.ljb.baselibrary.network.okhttp.intercepter.CacheInterceptor;
 import com.ljb.baselibrary.network.okhttp.intercepter.NetWorkCacheInterceptor;
+import com.ljb.baselibrary.network.retrofit.RxHelper;
+import com.ljb.baselibrary.network.retrofit.RxHttpUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Call;
@@ -31,12 +36,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class MainActivity extends AppCompatActivity {
-    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
+//    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
     //    private String url = "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk";
-    //    private String url = "http://pic1.win4000.com/wallpaper/e/584a7f69e9d4d.jpg";
+        private String url = "http://pic1.win4000.com/wallpaper/e/584a7f69e9d4d.jpg";
     private String url2 = "https://api.saiwuquan.com/api/upload";
 
     @Override
@@ -46,32 +52,43 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
 //
-//        RxHttp.with().create(ApiService.class)//
-//                .login("Ljb")//
-//                .compose(RxHelper.<UserInfo>transformer())//
-//                .subscribe(new RxJsonObserver<UserInfo>() {
-//
-//                    @Override
-//                    public void error(Throwable e) {
-//                        Log.e("TAG", "error: " + e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void success(UserInfo userInfo) {
-//                        Log.e("TAG", "success: " + userInfo.toString());
-//                    }
-//                });
+        RxHttpUtils.with()//
+                .addBaseUrl("bb", "http://pic1.win4000.com")//
+                .create(ApiService.class)//
+                .a()//
+                .compose(RxHelper.<ResponseBody>transformer())//
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ResponseBody responseBody) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
 //        c(tv);
 //        b(file);
 //        a(map);
-        d();
+//        d();
     }
 
     private void d() {
         CacheControl cacheControl = new CacheControl.Builder()//
                 .maxAge(10, TimeUnit.SECONDS)//
-                .maxStale(60,TimeUnit.SECONDS)//
+                .maxStale(60, TimeUnit.SECONDS)//
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient.Builder()//
                 .cache(new Cache(getCacheDir(), 1024 * 1024810))//

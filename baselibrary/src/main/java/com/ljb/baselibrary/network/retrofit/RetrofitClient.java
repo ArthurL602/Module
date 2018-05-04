@@ -2,6 +2,8 @@ package com.ljb.baselibrary.network.retrofit;
 
 import android.util.Log;
 
+import com.ljb.baselibrary.network.retrofit.interceptor.MoreBaseUrlInterceptor;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -18,9 +20,9 @@ public class RetrofitClient {
     private Retrofit mRetrofit;
     private static RetrofitClient sRetrofitClient;
     public String baseUrl = "http://192.168.199.187:8080/";
-
     private RetrofitClient() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()//
+                .addInterceptor(new MoreBaseUrlInterceptor())
                 .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                     @Override
                     public void log(String message) {
@@ -41,6 +43,7 @@ public class RetrofitClient {
         mRetrofit = retrofit;
     }
 
+
     public static RetrofitClient getInstance() {
         if (sRetrofitClient == null) {
             synchronized (RetrofitClient.class) {
@@ -55,4 +58,5 @@ public class RetrofitClient {
     public <T> T create(Class<T> clz) {
         return mRetrofit.create(clz);
     }
+
 }
