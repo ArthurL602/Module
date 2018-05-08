@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.ljb.baselibrary.db.DaoSupportFactory;
 import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
 import com.ljb.baselibrary.network.okhttp.HttpUtils;
 import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
@@ -14,6 +15,7 @@ import com.ljb.baselibrary.network.okhttp.intercepter.CacheInterceptor;
 import com.ljb.baselibrary.network.okhttp.intercepter.NetWorkCacheInterceptor;
 import com.ljb.baselibrary.network.retrofit.RxHelper;
 import com.ljb.baselibrary.network.retrofit.RxHttpUtils;
+import com.ljb.module.db.DefineUpgrade;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +42,9 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class MainActivity extends AppCompatActivity {
-//    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
+    //    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
     //    private String url = "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk";
-        private String url = "http://pic1.win4000.com/wallpaper/e/584a7f69e9d4d.jpg";
+    private String url = "http://pic1.win4000.com/wallpaper/e/584a7f69e9d4d.jpg";
     private String url2 = "https://api.saiwuquan.com/api/upload";
 
     @Override
@@ -51,7 +53,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
-//
+        DefineUpgrade defineUpgrade = new DefineUpgrade();
+        DaoSupportFactory daoSupportFactory = DaoSupportFactory.getInstance();
+        daoSupportFactory.initUpgradeSupport(defineUpgrade);
+
+//        f();
+//        c(tv);
+//        b(file);
+//        a(map);
+//        d();
+    }
+
+    private void f() {
         RxHttpUtils.with()//
                 .addBaseUrl("bb", "http://pic1.win4000.com")//
                 .create(ApiService.class)//
@@ -78,11 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-
-//        c(tv);
-//        b(file);
-//        a(map);
-//        d();
     }
 
     private void d() {
