@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.ljb.baselibrary.db.DaoSupportFactory;
+import com.ljb.baselibrary.db.DbSupport;
 import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
 import com.ljb.baselibrary.network.okhttp.HttpUtils;
 import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
@@ -54,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
         DefineUpgrade defineUpgrade = new DefineUpgrade();
-        DaoSupportFactory daoSupportFactory = DaoSupportFactory.getInstance();
-        daoSupportFactory.initUpgradeSupport(defineUpgrade);
+        String rootPath = "/data/data/" + getPackageName() + "/databases/";
+        String dbName = "my.db";
+        DbSupport dbSupport = DaoSupportFactory.getInstance().createDb(rootPath, dbName, 1, defineUpgrade);
+        dbSupport.getDao(UserInfo.class);
 
 //        f();
 //        c(tv);

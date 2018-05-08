@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Author      :meloon
  * Date        :2018/5/7
- * Description : 数据库支持类 接口的 实现类
+ * Description : 将数据库中的表格 抽象成类 一个对象
  */
 
 public class DaoSupport<T> implements IDaoSupport<T> {

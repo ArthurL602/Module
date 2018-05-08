@@ -5,10 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Author      :meloon
  * Date        :2018/5/8
- * Description :
+ * Description : 数据库升级模板类
  */
 
-public class UpgradeSupport {
+public abstract class UpgradeSupport {
 
     public UpgradeSupport() {
     }
@@ -20,8 +20,7 @@ public class UpgradeSupport {
      * @param oldVersion
      * @param newVersion
      */
-    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-    }
+    public abstract void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion);
 
     /**
      * 降级数据库
@@ -30,7 +29,5 @@ public class UpgradeSupport {
      * @param oldVersion
      * @param newVersion
      */
-    public void onDownGrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-
-    }
+    public abstract void onDownGrade(SQLiteDatabase database, int oldVersion, int newVersion);
 }
