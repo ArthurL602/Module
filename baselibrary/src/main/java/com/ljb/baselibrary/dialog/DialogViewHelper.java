@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 /**
  * Author      :ljb
  * Date        :2018/4/6
- * Description : Dialog View的辅助处理类
+ * Description : Dialog View的辅助处理类（view的一些实例化和事件监听）
  */
 public class DialogViewHelper {
     private View mContentView;

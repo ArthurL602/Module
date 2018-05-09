@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.ljb.baselibrary.db.DaoSupportFactory;
-import com.ljb.baselibrary.db.DbSupport;
 import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
 import com.ljb.baselibrary.network.okhttp.HttpUtils;
 import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
@@ -16,7 +14,6 @@ import com.ljb.baselibrary.network.okhttp.intercepter.CacheInterceptor;
 import com.ljb.baselibrary.network.okhttp.intercepter.NetWorkCacheInterceptor;
 import com.ljb.baselibrary.network.retrofit.RxHelper;
 import com.ljb.baselibrary.network.retrofit.RxHttpUtils;
-import com.ljb.module.db.DefineUpgrade;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
 
-
-        DefineUpgrade defineUpgrade = new DefineUpgrade();
-        String rootPath = "/data/data/" + getPackageName() + "/databases/";
-        String dbName = "my.db";
-        DbSupport dbSupport = DaoSupportFactory.getInstance().createDb(rootPath, dbName, 1, defineUpgrade);
-        dbSupport.getDao(UserInfo.class);
 
 //        f();
 //        c(tv);
@@ -113,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("TAG", message);
                     }
                 }).setLevel(HttpLoggingInterceptor.Level.BODY))
-
                 .build();
 
         HttpUtils.with(this).client(okHttpClient).isCache(true).cacheControl(cacheControl).get().url(url).addParam

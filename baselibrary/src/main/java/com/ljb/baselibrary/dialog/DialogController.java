@@ -75,6 +75,9 @@ class DialogController {
         return mViewHelper.getView(viewId);
     }
 
+    /**
+     *  参数辅助类
+     */
     public static class DialogParams {
         //上下文
         public Context mContext;
@@ -123,7 +126,6 @@ class DialogController {
                 viewHelper = new DialogViewHelper();
                 viewHelper.setContentView(mView);
             }
-
             if (viewHelper == null) {
                 throw new IllegalArgumentException("请设置布局setContentView()");
             }
