@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
+
+
         DefineUpgrade defineUpgrade = new DefineUpgrade();
         String rootPath = "/data/data/" + getPackageName() + "/databases/";
         String dbName = "my.db";

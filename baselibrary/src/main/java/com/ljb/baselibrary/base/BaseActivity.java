@@ -1,4 +1,4 @@
-package com.ljb.baselibrary;
+package com.ljb.baselibrary.base;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,6 +1,6 @@
 package com.ljb.framelibrary;
 
-import com.ljb.baselibrary.BaseActivity;
+import com.ljb.baselibrary.base.BaseActivity;
 
 /**
  * Author      :ljb
