@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 /**
  * Author      :ljb
@@ -49,8 +48,8 @@ class DialogController {
 
     public void setOnClickListener(int viewId, View.OnClickListener listener) {
         mViewHelper.setOnClickListener(viewId, listener);
-    }
-    /**
+     }
+     /**
      * 设置文本
      *
      * @param viewId
@@ -58,10 +57,6 @@ class DialogController {
      */
     public void setText(int viewId, CharSequence text) {
         mViewHelper.setText(viewId, text);
-        TextView tv = getView(viewId);
-        if (tv != null) {
-            tv.setText(text);
-        }
     }
 
     /**

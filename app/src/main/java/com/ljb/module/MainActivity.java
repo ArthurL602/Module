@@ -51,13 +51,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TextView tv = (TextView) findViewById(R.id.tv_test);
-
-
 //        f();
 //        c(tv);
 //        b(file);
 //        a(map);
 //        d();
+
     }
 
     private void f() {

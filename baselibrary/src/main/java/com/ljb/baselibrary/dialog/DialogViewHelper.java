@@ -17,6 +17,7 @@ public class DialogViewHelper {
     private View mContentView;
     private SparseArray<WeakReference<View>> mViews;
 
+
     public DialogViewHelper() {
 
     }
