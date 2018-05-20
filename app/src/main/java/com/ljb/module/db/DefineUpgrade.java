@@ -13,7 +13,11 @@ import com.ljb.baselibrary.db.UpgradeSupport;
 public class DefineUpgrade extends UpgradeSupport {
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-        super.onUpgrade(database, oldVersion, newVersion);
+
+    }
+
+    @Override
+    public void onDownGrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 
     }
 }

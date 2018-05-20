@@ -185,7 +185,7 @@ public class FixDexManager {
 
         Object applicationDexElements = getDexElementsByClassLoader(applicationClassLoader);
 
-        File optimizedDirectory = new File(mDexDir, "odex");
+        File optimizedDirectory = new File(mDexDir, "odex"); // optimized 优化
 
         if (!optimizedDirectory.exists()) {
             optimizedDirectory.mkdirs();

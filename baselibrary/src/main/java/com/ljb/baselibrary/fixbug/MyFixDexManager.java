@@ -35,7 +35,7 @@ public class MyFixDexManager {
      * @throws Exception
      */
     public void fixDex(String fileDexPath) throws Exception {
-        // 1. 获取已经运行的的 DexElement
+        // 1. 获取已经运行的的 DexPathList中的dexElements字段
         ClassLoader applicationClassLoader = mContext.getClassLoader();
         Object applicationDexElements = getDexElementsByClassLoader(applicationClassLoader);
 
@@ -64,6 +64,7 @@ public class MyFixDexManager {
             // optimizedDirectory  解压路径
             // libraryPath .so文件位置
             // parent 父ClassLoader
+            // 创建classloader对象
             ClassLoader fixDexClassLoader = new BaseDexClassLoader(//
                     fixDexFile.getAbsolutePath(),// 必须要在应用目录下的odex文件中 “”
                     optimizeDirection,//
@@ -148,18 +149,18 @@ public class MyFixDexManager {
     }
 
     /**
-     * 从ClassLoader中获取DexElement
+     * 从ClassLoader中获取 DexPathList中的dexElements字段
      *
      * @param classLoader
      * @return
      */
     private Object getDexElementsByClassLoader(ClassLoader classLoader) throws Exception {
-        // 1. 先获取获取pathList
+        // 1. 先获取获取 DexPathList字段
         Field pathListField = BaseDexClassLoader.class.getField("pathList");
         // 设置私有可用
         pathListField.setAccessible(true);
         Object pathList = pathListField.get(classLoader);
-        // 2. 获取pathList里面的DexElement;
+        // 2. 获取DexPathList字段的DexElement字段;
         Field dexElementsField = pathList.getClass().getField("dexElements");
         // 设置私有可用
         dexElementsField.setAccessible(true);
