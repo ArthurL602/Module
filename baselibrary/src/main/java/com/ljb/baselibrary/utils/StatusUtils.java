@@ -38,6 +38,10 @@ public class StatusUtils {
             ViewGroup parentView = (ViewGroup) activity.getWindow().getDecorView();
             View statusBar = createStatusBar(activity, color);
             parentView.addView(statusBar);
+            // 需要加FitSystemWindows,可以代码设置，也可以在xml中设置
+            ViewGroup contentView = activity.findViewById(android.R.id.content);
+            View activityView = contentView.getChildAt(0);
+            activityView.setFitsSystemWindows(true);
         }
     }
 
