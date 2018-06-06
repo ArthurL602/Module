@@ -40,7 +40,7 @@ public class SimpleBehavior extends FloatingActionButton.Behavior {
                 CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
                 child.animate().translationY(layoutParams.bottomMargin + child.getMeasuredHeight()).setDuration(400)
                         .start();
-                mBottomTab.animate().translationY(mBottomTab.getMeasuredHeight()).setDuration(200).start();
+//                mBottomTab.animate().translationY(mBottomTab.getMeasuredHeight()).setDuration(200).start();
 
                 isShow = true;
             }
@@ -48,7 +48,7 @@ public class SimpleBehavior extends FloatingActionButton.Behavior {
         } else if(dyConsumed<0){
             if (isShow) {
                 child.animate().translationY(0).setDuration(400).start();
-                mBottomTab.animate().translationY(0).setDuration(200).start();
+//                mBottomTab.animate().translationY(0).setDuration(200).start();
                 isShow = !isShow;
             }
         }

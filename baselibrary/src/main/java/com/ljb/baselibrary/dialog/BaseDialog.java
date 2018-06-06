@@ -24,6 +24,7 @@ public class BaseDialog extends Dialog {
         mController = new DialogController(this, getWindow());
     }
 
+
     /**
      * 设置监听
      *
@@ -64,6 +65,7 @@ public class BaseDialog extends Dialog {
         }
 
         public Builder(Context context, int themeResId) {
+
             mParams = new DialogController.DialogParams(context, themeResId);
         }
 

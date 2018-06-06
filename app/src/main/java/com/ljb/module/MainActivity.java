@@ -1,6 +1,5 @@
 package com.ljb.module;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -104,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     public void log(String message) {
                         Log.e("TAG", message);
                     }
-                }).setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build();
+                }).setLevel(HttpLoggingInterceptor.Level.BODY)).build();
 
         HttpUtils.with(this).client(okHttpClient).isCache(true).cacheControl(cacheControl).get().url(url).addParam
                 ("userName", "Ljb").execute(new JsonCallBack<UserInfo>() {
