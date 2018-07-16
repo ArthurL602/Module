@@ -1,7 +1,5 @@
 package com.ljb.baselibrary.network.okhttp;
 
-import android.content.Context;
-
 import com.ljb.baselibrary.network.okhttp.callback.EngineCallBack;
 import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 
@@ -26,7 +24,7 @@ public class HttpUtils {
     public static final int TYPE_POST_OTHER = 0X0013;
     public static final int TYPE_POST_FILE = 0X0014;
 
-    private Context mContext;
+    private Object mTag;
 
     private Map<String, Object> mParams;
     private boolean isCache = false;
@@ -45,13 +43,23 @@ public class HttpUtils {
     }
 
 
-    private HttpUtils(Context context) {
-        mContext = context;
+    private HttpUtils(Object tag) {
+        mTag = tag;
         mParams = new HashMap<>();
     }
 
-    public static HttpUtils with(Context context) {
-        return new HttpUtils(context);
+    public HttpUtils() {
+        mParams = new HashMap<>();
+        mTag = null;
+    }
+
+    public static HttpUtils with() {
+        return new HttpUtils();
+    }
+
+    public static HttpUtils with(Object o) {
+        if (o == null) return new HttpUtils();
+        return new HttpUtils(o);
     }
 
     /**
@@ -168,7 +176,7 @@ public class HttpUtils {
      * @param callBack
      */
     public <T> void execute(EngineCallBack<T> callBack) {
-        callBack.onPreExecute(mContext, mParams);
+        callBack.onPreExecute(mTag, mParams);
         if (callBack == null) {
             callBack = EngineCallBack.DEFAULT_CALL_BACK;
         }
@@ -217,7 +225,7 @@ public class HttpUtils {
      * @param callBack
      */
     private void get(String url, Map<String, Object> params, EngineCallBack callBack) {
-        sIHttpEngine.get(mContext, url, params, isCache, mCacheControl, callBack);
+        sIHttpEngine.get(mTag, url, params, isCache, mCacheControl, callBack);
     }
 
     /**
@@ -228,7 +236,7 @@ public class HttpUtils {
      * @param callBack
      */
     private void postForm(String url, Map<String, Object> params, EngineCallBack callBack) {
-        sIHttpEngine.postForm(mContext, url, params, callBack);
+        sIHttpEngine.postForm(mTag, url, params, callBack);
     }
 
     /**
@@ -240,7 +248,7 @@ public class HttpUtils {
      * @param <T>
      */
     private <T> void postOther(String url, RequestBody requestBody, EngineCallBack<T> callBack) {
-        sIHttpEngine.postOther(mContext, url, requestBody, callBack);
+        sIHttpEngine.postOther(mTag, url, requestBody, callBack);
     }
 
     /**
@@ -252,6 +260,6 @@ public class HttpUtils {
      * @param <T>
      */
     private <T> void postFile(String url, Map<String, Object> params, UploadCallBack callBack) {
-        sIHttpEngine.postFile(mContext, url, params, callBack);
+        sIHttpEngine.postFile(mTag, url, params, callBack);
     }
 }

@@ -1,7 +1,5 @@
 package com.ljb.baselibrary.network.okhttp.callback;
 
-import android.content.Context;
-
 import java.util.Map;
 
 import okhttp3.Response;
@@ -12,7 +10,7 @@ import okhttp3.Response;
  * Description :
  */
 public abstract class EngineCallBack<T> {
-    public void onPreExecute(Context context, Map<String, Object> params) {
+    public void onPreExecute(Object tag, Map<String, Object> params) {
 
     }
     public abstract void onError(Throwable e);
