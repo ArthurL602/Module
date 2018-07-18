@@ -21,6 +21,7 @@ public abstract class JsonCallBack<T> extends EngineCallBack<BaseResult<T>> {
         BaseResult baseResult = mGson.fromJson(response.body().string(), BaseResult.class);
         if (baseResult.isOk()) {
             Class<?> clz = NetUtils.analysisClassInfo(getClass(), 0);
+            // 这里可能json解析失败，可以通过Jsonobject 得到data的字符串
             T t = (T) mGson.fromJson(baseResult.getData().toString(), clz);
             onSuccessful(t);
             return baseResult;
