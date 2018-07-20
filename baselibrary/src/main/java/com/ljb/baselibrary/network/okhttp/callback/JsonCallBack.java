@@ -23,7 +23,7 @@ public abstract class JsonCallBack<T> extends EngineCallBack<BaseResult<T>> {
     @Override
     public BaseResult<T> parseNetworkResponse(Response response) throws Exception {
         String result = response.body().string();
-        JSONObject jsonObject =new JSONObject(result);
+        JSONObject jsonObject = new JSONObject(result);
         BaseResult baseResult = mGson.fromJson(result, BaseResult.class);
         if (baseResult.isOk()) {
             Class<?> clz = NetUtils.analysisClassInfo(getClass(), 0);
