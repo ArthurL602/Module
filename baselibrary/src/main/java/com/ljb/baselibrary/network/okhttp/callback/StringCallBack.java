@@ -33,7 +33,7 @@ public abstract class  StringCallBack extends EngineCallBack<BaseResult> {
             }
             return baseResult;
         }
-        onError(new ApiException(" code: " + baseResult.getCode() + "; " + baseResult.getMsg()));
+        onError(new ApiException("code: " + baseResult.getCode() + "; " + baseResult.getMsg()));
         return null;
     }
     @Override
