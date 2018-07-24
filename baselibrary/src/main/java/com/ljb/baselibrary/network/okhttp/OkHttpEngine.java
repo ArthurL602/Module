@@ -1,6 +1,5 @@
 package com.ljb.baselibrary.network.okhttp;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.ljb.baselibrary.network.Utils.AndroidPlatform;
@@ -64,7 +63,7 @@ class OkHttpEngine implements IHttpEngine {
     /**
      * get请求
      *
-     * @param context
+     * @param tag
      * @param url
      * @param params
      * @param cache
@@ -73,11 +72,11 @@ class OkHttpEngine implements IHttpEngine {
      * @param <T>
      */
     @Override
-    public <T> void get(final Context context, String url, Map<String, Object> params, boolean cache, CacheControl
+    public <T> void get(final Object tag, String url, Map<String, Object> params, boolean cache, CacheControl
             cacheControl, final EngineCallBack<T> callBack) {
         // 添加请求参数
         url = NetUtils.joinParams(url, params);
-        final Request request = createRequest(context, url, cache, cacheControl);
+        final Request request = createRequest(tag, url, cache, cacheControl);
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -137,14 +136,15 @@ class OkHttpEngine implements IHttpEngine {
 
 
     @Override
-    public <T> void postForm(Context context, String url, Map<String, Object> params, final EngineCallBack<T>
-            callBack) {
+    public <T> void postForm(Object tag, String url, Map<String, Object> params, final EngineCallBack<T> callBack) {
         RequestBody requestBody = createFormBody(params);
-        Request request = new Request.Builder()//
+        Request.Builder builder = new Request.Builder()//
                 .url(url)//
-                .tag(context)//
-                .post(requestBody)//
-                .build();
+                .post(requestBody);//
+        if (tag != null) {
+            builder.tag(tag);
+        }
+        Request request = builder.build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -176,19 +176,21 @@ class OkHttpEngine implements IHttpEngine {
     /**
      * 提交其他类型的body （eg json xml）
      *
-     * @param context
+     * @param tag
      * @param url
      * @param requestBody
      * @param callBack
      * @param <T>
      */
     @Override
-    public <T> void postOther(Context context, String url, RequestBody requestBody, final EngineCallBack<T> callBack) {
-        Request request = new Request.Builder()//
+    public <T> void postOther(Object tag, String url, RequestBody requestBody, final EngineCallBack<T> callBack) {
+        Request.Builder builder = new Request.Builder()//
                 .url(url)//
-                .tag(context)//
-                .post(requestBody)//
-                .build();
+                .post(requestBody);//
+        if (tag != null) {
+            builder.tag(tag);
+        }
+        Request request = builder.build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -219,14 +221,16 @@ class OkHttpEngine implements IHttpEngine {
 
 
     @Override
-    public <T> void postFile(Context context, String url, Map<String, Object> params, final UploadCallBack callBack) {
+    public <T> void postFile(Object tag, String url, Map<String, Object> params, final UploadCallBack callBack) {
         RequestBody multipartBody = createMultipartBody(params);
         ExMultipartBody body = new ExMultipartBody(multipartBody, callBack);
-        Request request = new Request.Builder()//
+        Request.Builder builder = new Request.Builder()//
                 .url(url)//
-                .post(body)//
-                .tag(context)//
-                .build();
+                .post(body);//
+        if (tag != null) {
+            builder.tag(tag);
+        }
+        Request request = builder.build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
@@ -264,17 +268,19 @@ class OkHttpEngine implements IHttpEngine {
     /**
      * 构建一个Request
      *
-     * @param context
+     * @param tag
      * @param url
      * @param cache
      * @param cacheControl
      * @return
      */
-    private Request createRequest(Context context, String url, boolean cache, CacheControl cacheControl) {
+    private Request createRequest(Object tag, String url, boolean cache, CacheControl cacheControl) {
         // 构建Request
         Request.Builder builder = new Request.Builder()//
-                .url(url)//
-                .tag(context);
+                .url(url);//
+        if (tag != null) {
+            builder.tag(tag);
+        }
         Request request = null;
         if (!cache) { // 不需要缓存,都不存储
             CacheControl control = new CacheControl.Builder()//
