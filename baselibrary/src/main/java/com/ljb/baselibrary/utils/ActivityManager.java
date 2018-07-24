@@ -3,12 +3,11 @@ package com.ljb.baselibrary.utils;
 import android.app.Activity;
 
 import java.util.Stack;
-
 /**
- * Author      :ljb
- * Date        :2018/7/24
- * Description : ActivityManaer
- */
+*  Author      :ljb
+*  Date        :2018/7/24
+*  Description :
+*/
 public class ActivityManager {
 
     private static volatile ActivityManager sActivityManager;
