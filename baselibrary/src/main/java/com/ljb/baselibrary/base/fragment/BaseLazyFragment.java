@@ -93,6 +93,7 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     protected abstract void onFragmentVisibleChange(boolean isVisible);
+
 //    private void onFragmentVisibleChange(boolean visible) {
 //        if (visible) {//如果是可见状态
 //
