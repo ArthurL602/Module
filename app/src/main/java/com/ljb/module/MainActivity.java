@@ -3,8 +3,11 @@ package com.ljb.module;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ljb.baselibrary.navigationbar.NavigationBar;
 import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
 import com.ljb.baselibrary.network.okhttp.HttpUtils;
 import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
@@ -49,7 +52,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ViewGroup paren = (ViewGroup) findViewById(R.id.root);
+        NavigationBar navigationBar = new NavigationBar.Builder(this,R.layout.layout_tool,paren)//
+                .setText(R.id.tv_title,"我的标题")//
+                .setOnclickListener(R.id.tv_back, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.e("TAG", "onClick");
+                    }
+                })
+        .create();
+        navigationBar.findViewById(R.id.tv_back).setVisibility(View.GONE);
         final TextView tv = (TextView) findViewById(R.id.tv_test);
 //        f();
 //        c(tv);

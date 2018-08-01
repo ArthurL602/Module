@@ -20,27 +20,27 @@ android {
         }
     }
     // 打包 文件位置
-    applicationVariants.all {
-        //判断是release还是debug版本
-        def buildType = it.buildType.name
-        def fileName
-        //获取当前时间的"YYYY-MM-dd"格式。
-        def createTime = new Date().format("YYYY-MM-dd-HH-mm", TimeZone.getTimeZone("GMT+08:00"))
-        //只对Release包起作用，如果不是Release包则不变更输出路径，否则可能导致AS无法自动安装debug包。
-//        if (buildType == "release") {
-////            it.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/apks/${createTime}")
+//    applicationVariants.all {
+//        //判断是release还是debug版本
+//        def buildType = it.buildType.name
+//        def fileName
+//        //获取当前时间的"YYYY-MM-dd"格式。
+//        def createTime = new Date().format("YYYY-MM-dd-HH-mm", TimeZone.getTimeZone("GMT+08:00"))
+//        //只对Release包起作用，如果不是Release包则不变更输出路径，否则可能导致AS无法自动安装debug包。
+////        if (buildType == "release") {
+//////            it.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/apks/${createTime}")
+////        }
+//        it.outputs.each {
+//            //只对Release包起作用，如果不是Release包则不变更名称。
+//            if (buildType == "release") {
+//                def path = "${rootProject.rootDir}/apk/" + it.name.toString()
+//                //这里修改apk文件名 命名规则：meinuo_版本号_版本名_时间.apl
+//                fileName = "meinuo_${defaultConfig.versionCode}_v${defaultConfig.versionName}_${createTime}.apk"
+//                //可以通过这个方法修改输出文件名
+//                it.outputFile = new File(path, fileName)
+//            }
 //        }
-        it.outputs.each {
-            //只对Release包起作用，如果不是Release包则不变更名称。
-            if (buildType == "release") {
-                def path = "${rootProject.rootDir}/apk/" + it.name.toString()
-                //这里修改apk文件名 命名规则：meinuo_版本号_版本名_时间.apl
-                fileName = "meinuo_${defaultConfig.versionCode}_v${defaultConfig.versionName}_${createTime}.apk"
-                //可以通过这个方法修改输出文件名
-                it.outputFile = new File(path, fileName)
-            }
-        }
-    }
+//    }
     /*打jar包*/
     def SDK_BASENAME = "melon";
     def SDK_VERSION = "_v1.0";
