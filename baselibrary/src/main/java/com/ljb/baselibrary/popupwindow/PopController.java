@@ -23,6 +23,9 @@ public class PopController {
 
     public void show() {
         if (mParams != null && mPopupWindow != null) {
+            WindowManager.LayoutParams attrs = mParams.window.getAttributes();
+            attrs.alpha =mParams.alpha;
+            mParams.window.setAttributes(attrs);
             if (mParams.isDropDown) {
                 if (Build.VERSION.SDK_INT >= 19) {
                     mPopupWindow.showAsDropDown(mParams.anchor, mParams.xoff, mParams.yoff, mParams.gravity);
@@ -152,14 +155,14 @@ public class PopController {
 
             final Window window = this.window;
             final WindowManager.LayoutParams attr = window.getAttributes();
-            attr.alpha = alpha;
+//            attr.alpha = alpha;
             window.setAttributes(attr);
             popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-                    if(mDismissListener==null) return;
                     attr.alpha = 1.0f;
                     window.setAttributes(attr);
+                    if(mDismissListener==null) return;
                     mDismissListener.onDismiss();
                 }
             });
