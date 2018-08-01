@@ -157,6 +157,7 @@ public class PopController {
             popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
+                    if(mDismissListener==null) return;
                     attr.alpha = 1.0f;
                     window.setAttributes(attr);
                     mDismissListener.onDismiss();
