@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 /**
  * Author      :ljb
  * Date        :2018/3/29
- * Description : 适配添加头部和尾部的Adapter
+ * Description : 装饰设计模式 （添加头部和尾部的Adapter）
  */
 
 public class WrapRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
