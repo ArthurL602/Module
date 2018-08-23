@@ -160,7 +160,6 @@ public class ScreenUtil {
         return bigbitmap;
     }
 
-
     /**
      * recycleview截图
      * @param view
