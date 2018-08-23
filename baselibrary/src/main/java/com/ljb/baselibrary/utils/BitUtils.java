@@ -3,8 +3,17 @@ package com.ljb.baselibrary.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.view.View;
+import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 
@@ -124,4 +133,79 @@ public class BitUtils {
             return BitmapFactory.decodeFile(pathName, options);
         }
     }
+    /**
+     * view转bitmap
+     */
+    public Bitmap viewConversionBitmap(View v) {
+        int w = v.getWidth();
+        int h = v.getHeight();
+
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+
+        c.drawColor(Color.WHITE);
+        /** 如果不设置canvas画布为白色，则生成透明 */
+
+        v.layout(0, 0, w, h);
+        v.draw(c);
+
+        return bmp;
+    }
+
+    /**
+     * 把上面获得的bitmap传进来就可以得到圆角的bitmap了
+     */
+    public void bitmapInBitmap(Bitmap bitmap, ImageView imageView) {
+        Bitmap tempBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(tempBitmap);
+
+        //图像上画矩形
+        Paint paint = new Paint();
+        paint.setColor(Color.TRANSPARENT);
+        paint.setStyle(Paint.Style.STROKE);//不填充
+        paint.setStrokeWidth(10);  //线的宽度
+        canvas.drawRect(10, 20, 100, 100, paint);
+        imageView.setImageBitmap(tempBitmap);
+
+        //画中画
+        Paint photoPaint = new Paint(); // 建立画笔
+        photoPaint.setDither(true); // 获取跟清晰的图像采样
+        photoPaint.setFilterBitmap(true);// 过滤一些
+
+        Rect src = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());// 创建一个指定的新矩形的坐标
+        Rect dst = new Rect(0, 0, 300, 350);// 创建一个指定的新矩形的坐标
+        canvas.drawBitmap(tempBitmap, src, dst, photoPaint);// 将photo 缩放或则扩大到
+        imageView.setImageBitmap(getRoundedCornerBitmap(tempBitmap));
+    }
+
+    /**
+     *   生成圆角图片
+     */
+    public Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        try {
+            Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                    bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(output);
+            final Paint paint = new Paint();
+            final Rect rect = new Rect(0, 0, bitmap.getWidth(),
+                    bitmap.getHeight());
+            final RectF rectF = new RectF(new Rect(0, 0, bitmap.getWidth(),
+                    bitmap.getHeight()));
+            //设置圆角大小
+            final float roundPx = 30;
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(Color.BLACK);
+            canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            final Rect src = new Rect(0, 0, bitmap.getWidth(),
+                    bitmap.getHeight());
+            canvas.drawBitmap(bitmap, src, rect, paint);
+            return output;
+        } catch (Exception e) {
+            return bitmap;
+        }
+    }
+
+
 }
