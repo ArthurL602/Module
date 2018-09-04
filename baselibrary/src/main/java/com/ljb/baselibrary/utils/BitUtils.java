@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -12,10 +13,13 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Author      :meloon
@@ -133,10 +137,11 @@ public class BitUtils {
             return BitmapFactory.decodeFile(pathName, options);
         }
     }
+
     /**
      * view转bitmap
      */
-    public Bitmap viewConversionBitmap(View v) {
+    public static Bitmap viewConversionBitmap(View v) {
         int w = v.getWidth();
         int h = v.getHeight();
 
@@ -155,7 +160,7 @@ public class BitUtils {
     /**
      * 把上面获得的bitmap传进来就可以得到圆角的bitmap了
      */
-    public void bitmapInBitmap(Bitmap bitmap, ImageView imageView) {
+    public static void bitmapInBitmap(Bitmap bitmap, ImageView imageView) {
         Bitmap tempBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(tempBitmap);
 
@@ -179,18 +184,15 @@ public class BitUtils {
     }
 
     /**
-     *   生成圆角图片
+     * 生成圆角图片
      */
-    public Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         try {
-            Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                    bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(output);
             final Paint paint = new Paint();
-            final Rect rect = new Rect(0, 0, bitmap.getWidth(),
-                    bitmap.getHeight());
-            final RectF rectF = new RectF(new Rect(0, 0, bitmap.getWidth(),
-                    bitmap.getHeight()));
+            final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            final RectF rectF = new RectF(new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()));
             //设置圆角大小
             final float roundPx = 30;
             paint.setAntiAlias(true);
@@ -198,8 +200,7 @@ public class BitUtils {
             paint.setColor(Color.BLACK);
             canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-            final Rect src = new Rect(0, 0, bitmap.getWidth(),
-                    bitmap.getHeight());
+            final Rect src = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
             canvas.drawBitmap(bitmap, src, rect, paint);
             return output;
         } catch (Exception e) {
@@ -207,5 +208,248 @@ public class BitUtils {
         }
     }
 
+    /**
+     * 将Bitmap压缩到不超过某个数值
+     *
+     * @param srcBitmap
+     * @param reqSize
+     * @return
+     */
+    public static Bitmap compressMaxSize(Bitmap srcBitmap, int reqSize) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //这里100表示不压缩，把压缩后的数据存放到baos中
+        srcBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        int options = 95;
+        //如果压缩后的大小超出所要求的，继续压缩
+        while (baos.toByteArray().length / 1024 > reqSize) {
+            baos.reset();
+            srcBitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            //每次减少5%质量
+            if (options > 5) {//避免出现options<=0
+                options -= 5;
+            } else {
+                break;
+            }
+        }
+        return BitmapFactory.decodeByteArray(baos.toByteArray(), 0, baos.toByteArray().length);
+    }
 
+    /**
+     * 质量压缩
+     *
+     * @param srcBitmap 原Bitmap
+     * @param quality   0-100
+     * @return
+     */
+    public static Bitmap compressQuality(Bitmap srcBitmap, int quality) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 把压缩后的数据存放到baos中
+        srcBitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        byte[] bytes = baos.toByteArray();
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    /**
+     * 采样率压缩
+     *
+     * @param resources
+     * @param resId
+     * @param width     目标view的宽
+     * @param height    目标view的高
+     * @return
+     */
+    public static Bitmap compressInSampleSize(Resources resources, int resId, int width, int height) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(resources, resId, options);
+        //获取采样率
+        options.inSampleSize = calculateInSampleSize_1(options, width, height);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(resources, resId, options);
+    }
+
+    /**
+     * 缩放法压缩
+     *
+     * @param srcBitmap 原Bitmap
+     * @param scaleX    x方向比例
+     * @param scaleY    y方向比例
+     * @return
+     */
+    public static Bitmap compressMatrix(Bitmap srcBitmap, float scaleX, float scaleY) {
+        Matrix matrix = new Matrix();
+        matrix.setScale(scaleX, scaleY);
+        return Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(), srcBitmap.getHeight(), matrix, true);
+    }
+
+    /**
+     * RGB_565压缩
+     *
+     * @param srcBitmap
+     * @return
+     */
+    public static Bitmap compressRGB565(Bitmap srcBitmap) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        return Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), Bitmap.Config.RGB_565);
+    }
+
+    /**
+     * RGB_565压缩
+     *
+     * @param resources
+     * @param resId
+     * @return
+     */
+    public static Bitmap compressRGB565(Resources resources, int resId) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        return BitmapFactory.decodeResource(resources, resId, options);
+    }
+
+    /**
+     * createScaledBitmap 压缩
+     *
+     * @param srcBitmap
+     * @param dstWidth
+     * @param dstHeight
+     * @return
+     */
+    public static Bitmap compressScaleBitmap(Bitmap srcBitmap, int dstWidth, int dstHeight) {
+        return Bitmap.createScaledBitmap(srcBitmap, dstWidth, dstHeight, true);
+    }
+
+    /**
+     * 计算采样率 1
+     *
+     * @param options
+     * @param reqHeight
+     * @param reqWidth
+     * @return
+     */
+    private static int calculateInSampleSize_1(BitmapFactory.Options options, int reqHeight, int reqWidth) {
+        int height = options.outHeight;
+        int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+            int halfHeight = height / 2;
+            int halfWidth = width / 2;
+            //计算缩放比，是2的指数
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    /**
+     * 计算采样率 2
+     *
+     * @param options
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static int calculateInSampleSize_2(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int width = options.outWidth;
+        final int height = options.outHeight;
+        int inSampleSize = 1;
+        if (width > reqWidth || height > reqHeight) {
+            if (width > height) {
+                inSampleSize = Math.round((float) height / (float) reqHeight);
+            } else {
+                inSampleSize = Math.round((float) width / (float) reqWidth);
+            }
+        }
+        return inSampleSize;
+    }
+
+    /**
+     * 图片的缩放方法
+     *
+     * @param bitmap  ：源图片资源
+     * @param maxSize ：图片允许最大空间  单位:KB
+     * @return
+     */
+    public static Bitmap getZoomImage(Bitmap bitmap, double maxSize) {
+        if (null == bitmap) {
+            return null;
+        }
+        if (bitmap.isRecycled()) {
+            return null;
+        }
+        // 单位：从 Byte 换算成 KB
+        double currentSize = bitmapToByteArray(bitmap, false).length / 1024;
+        // 判断bitmap占用空间是否大于允许最大空间,如果大于则压缩,小于则不压缩
+        while (currentSize > maxSize) {
+            // 计算bitmap的大小是maxSize的多少倍
+            double multiple = currentSize / maxSize;
+            // 开始压缩：将宽带和高度压缩掉对应的平方根倍
+            // 1.保持新的宽度和高度，与bitmap原来的宽高比率一致
+            // 2.压缩后达到了最大大小对应的新bitmap，显示效果最好
+            bitmap = getZoomImage(bitmap, bitmap.getWidth() / Math.sqrt(multiple), bitmap.getHeight() / Math.sqrt(multiple));
+            currentSize = bitmapToByteArray(bitmap, false).length / 1024;
+        }
+        return bitmap;
+    }
+
+    /**
+     * 图片的缩放方法
+     *
+     * @param orgBitmap ：源图片资源
+     * @param newWidth  ：缩放后宽度
+     * @param newHeight ：缩放后高度
+     * @return
+     */
+    public static Bitmap getZoomImage(Bitmap orgBitmap, double newWidth, double newHeight) {
+        if (null == orgBitmap) {
+            return null;
+        }
+        if (orgBitmap.isRecycled()) {
+            return null;
+        }
+        if (newWidth <= 0 || newHeight <= 0) {
+            return null;
+        }
+        // 获取图片的宽和高
+        float width = orgBitmap.getWidth();
+        float height = orgBitmap.getHeight();
+        // 创建操作图片的matrix对象
+        Matrix matrix = new Matrix();
+        // 计算宽高缩放率
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 缩放图片动作
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap bitmap = Bitmap.createBitmap(orgBitmap, 0, 0, (int) width, (int) height, matrix, true);
+        return bitmap;
+    }
+
+    /**
+     * bitmap转换成byte数组
+     *
+     * @param bitmap
+     * @param needRecycle
+     * @return
+     */
+    public static byte[] bitmapToByteArray(Bitmap bitmap, boolean needRecycle) {
+        if (null == bitmap) {
+            return null;
+        }
+        if (bitmap.isRecycled()) {
+            return null;
+        }
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+        if (needRecycle) {
+            bitmap.recycle();
+        }
+        byte[] result = output.toByteArray();
+        try {
+            output.close();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+        return result;
+    }
 }
