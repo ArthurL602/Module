@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -16,6 +18,7 @@ import com.ljb.baselibrary.ioc.ViewUtils;
  * Description : 所有Activity的基类
  */
 public abstract class BaseActivity extends AppCompatActivity {
+    private Fragment mCurrentFragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,5 +86,28 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected <T extends View> T viewById(@IdRes int viewId) {
         return (T) findViewById(viewId);
+    }
+
+    /**
+     * 切换Fragment
+     * @param targetFragment 目标Fragment
+     * @param addToBackTask 是否添加到返回栈
+     */
+    protected void changeFragmengt(Fragment targetFragment,boolean addToBackTask){
+        if(mCurrentFragment==null){
+            mCurrentFragment=new Fragment();
+        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if(targetFragment.isAdded()){
+            transaction.hide(targetFragment).show(targetFragment);
+        }else{
+            // 0 为 控件ID
+            transaction.hide(targetFragment).add(0,targetFragment);
+        }
+        if(addToBackTask){
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+        mCurrentFragment =  targetFragment;
     }
 }
