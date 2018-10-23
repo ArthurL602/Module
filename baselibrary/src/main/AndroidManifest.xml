@@ -3,6 +3,8 @@
           package="com.ljb.baselibrary"
 >
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/> <!--Android 8.0 需要权限-->
     <application android:allowBackup="true"
                  android:label="@string/app_name"
                  android:supportsRtl="true"

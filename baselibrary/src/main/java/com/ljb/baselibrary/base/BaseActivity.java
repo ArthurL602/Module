@@ -1,9 +1,12 @@
 package com.ljb.baselibrary.base;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.ljb.baselibrary.ioc.ViewUtils;
+import com.ljb.baselibrary.utils.InstallUitls;
 
 /**
  * Author      :ljb
@@ -19,6 +23,7 @@ import com.ljb.baselibrary.ioc.ViewUtils;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private Fragment mCurrentFragment;
+    private final int GET_UNKNOWN_APP_SOURCES = 1111;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,5 +114,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         transaction.commit();
         mCurrentFragment =  targetFragment;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch(requestCode){
+            case 10010:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    InstallUitls.installApkAll(this, null);
+                } else {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                    startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
+                }
+            break;
+        }
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case GET_UNKNOWN_APP_SOURCES:
+                InstallUitls.installApkAll(this, null);
+                break;
+        }
+
     }
 }
