@@ -87,7 +87,7 @@ public class PhotoUtils {
      * @return
      */
     public static Uri getUri(Context context,File srcFile){
-        Uri uri;
+        Uri uri=null;
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
             uri= FileProvider.getUriForFile(context, context.getPackageName() + ".provider", srcFile);//通过FileProvider创建一个content类型的Uri
         }else{

@@ -12,6 +12,8 @@ import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
 import com.ljb.baselibrary.network.okhttp.HttpUtils;
 import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
 import com.ljb.baselibrary.network.okhttp.callback.JsonCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.JsonListCallBack;
+import com.ljb.baselibrary.network.okhttp.callback.StringCallBack;
 import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
 import com.ljb.baselibrary.network.okhttp.intercepter.CacheInterceptor;
 import com.ljb.baselibrary.network.okhttp.intercepter.NetWorkCacheInterceptor;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -52,25 +55,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ViewGroup paren = (ViewGroup) findViewById(R.id.root);
-        NavigationBar navigationBar = new NavigationBar.Builder(this,R.layout.layout_tool,paren)//
-                .setText(R.id.tv_title,"我的标题")//
-                .setOnclickListener(R.id.tv_back, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e("TAG", "onClick");
-                    }
-                })
-        .create();
-        navigationBar.findViewById(R.id.tv_back).setVisibility(View.GONE);
-        final TextView tv = (TextView) findViewById(R.id.tv_test);
+//        ViewGroup paren = (ViewGroup) findViewById(R.id.root);
+//        NavigationBar navigationBar = new NavigationBar.Builder(this,R.layout.layout_tool,paren)//
+//                .setText(R.id.tv_title,"我的标题")//
+//                .setOnclickListener(R.id.tv_back, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Log.e("TAG", "onClick");
+//                    }
+//                })
+//        .create();
+//        navigationBar.findViewById(R.id.tv_back).setVisibility(View.GONE);
+//        final TextView tv = (TextView) findViewById(R.id.tv_test);
 //        f();
 //        c(tv);
 //        b(file);
 //        a(map);
 //        d();
         Log.e("TAG", ""+ getClassLoader());
+HttpUtils.with().get().url("http://www.baidu.com").execute(new JsonListCallBack<Person>() {
+    @Override
+    public void onError(Throwable e) {
 
+    }
+
+    @Override
+    public void onSuccessful(List<Person> list) {
+        Log.e("TAG", "onSuccessful: "+list.toString());
+    }
+});
     }
 
     private void f() {
