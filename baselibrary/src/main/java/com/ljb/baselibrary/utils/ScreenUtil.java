@@ -1,31 +1,42 @@
 package com.ljb.baselibrary.utils;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.RequiresPermission;
 import android.util.DisplayMetrics;
-import android.util.LruCache;
-import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.ScrollView;
+import android.view.Surface;
+import android.view.Window;
+import android.view.WindowManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import static android.Manifest.permission.WRITE_SETTINGS;
 
 /**
  * 屏幕相关的工具类
  */
 
 public class ScreenUtil {
+    private static int getStatusBarHeight() {
+        Resources resources = Resources.getSystem();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        return resources.getDimensionPixelSize(resourceId);
+    }
+
+    private static int getNavBarHeight() {
+        Resources res = Resources.getSystem();
+        int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId != 0) {
+            return res.getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
+    }
+
     /**
      * 获得屏幕的宽
      * @param context
@@ -46,191 +57,252 @@ public class ScreenUtil {
 
     /**
      * 获取屏幕密度
-     * @param context
      * @return
      */
-    public  static float getScreenDensity(Context context){
-        return  context.getResources().getDisplayMetrics().density;
+    public  static float getScreenDensity(){
+        return  Resources.getSystem().getDisplayMetrics().density;
     }
 
     /**
      * 获取屏幕密度dpi
-     * @param context
      * @return
      */
-    public static float getScreenDensityDpi(Context context){
-        return context.getResources().getDisplayMetrics().densityDpi;
+    public static float getScreenDensityDpi(){
+        return Resources.getSystem().getDisplayMetrics().densityDpi;
 
     }
 
-
     /**
-     * 截屏
-     *
-     * @param activity activity
-     * @return Bitmap
+     * 设置屏幕为全屏
+     * @param activity
      */
-    public static Bitmap screenShot(@NonNull final Activity activity) {
-        return screenShot(activity, false);
+    public static void setFullScreen(@NonNull final Activity activity) {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     /**
-     * 截屏
+     * 设置屏幕为非全屏
      *
-     * @param activity activity
-     * @return Bitmap
      */
-    public static Bitmap screenShot(@NonNull final Activity activity, boolean isDeleteStatusBar) {
-        View decorView = activity.getWindow().getDecorView();
-        decorView.setDrawingCacheEnabled(true);
-        decorView.buildDrawingCache();
-        Bitmap bmp = decorView.getDrawingCache();
-        DisplayMetrics dm = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Bitmap ret;
-        if (isDeleteStatusBar) {
-            Resources resources = activity.getResources();
-            int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-            int statusBarHeight = resources.getDimensionPixelSize(resourceId);
-            ret = Bitmap.createBitmap(bmp, 0, statusBarHeight, dm.widthPixels, dm.heightPixels - statusBarHeight);
+    public static void setNonFullScreen(@NonNull final Activity activity) {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /**
+     * 切换屏幕为全屏与否状态
+     * @param activity
+     */
+    public static void toggleFullScreen(@NonNull final Activity activity) {
+        int fullScreenFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        Window window = activity.getWindow();
+        if ((window.getAttributes().flags & fullScreenFlag) == fullScreenFlag) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         } else {
-            ret = Bitmap.createBitmap(bmp, 0, 0, dm.widthPixels, dm.heightPixels);
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-        decorView.destroyDrawingCache();
-        return ret;
     }
 
     /**
-     * 获取scrollview的截屏
-     */
-    public static Bitmap scrollViewScreenShot(ScrollView scrollView) {
-        int h = 0;
-        Bitmap bitmap = null;
-        for (int i = 0; i < scrollView.getChildCount(); i++) {
-            h += scrollView.getChildAt(i).getHeight();
-            scrollView.getChildAt(i).setBackgroundColor(Color.parseColor("#ffffff"));
-        }
-        bitmap = Bitmap.createBitmap(scrollView.getWidth(), h, Bitmap.Config.RGB_565);
-        final Canvas canvas = new Canvas(bitmap);
-        scrollView.draw(canvas);
-        return bitmap;
-    }
-
-    /**
-     * 获取listview的截屏
-     * @param listview
+     * 判断屏幕是否为全屏
+     * @param activity
      * @return
      */
-    public static Bitmap shotListView(ListView listview) {
-        ListAdapter adapter = listview.getAdapter();
-        int itemscount = adapter.getCount();
-        int allitemsheight = 0;
-        List<Bitmap> bmps = new ArrayList<Bitmap>();
-
-        //循环对listview的item进行截图， 最后拼接在一起
-        for (int i = 0; i < itemscount; i++) {
-            View childView = adapter.getView(i, null, listview);
-            childView.measure(
-                    View.MeasureSpec.makeMeasureSpec(listview.getWidth(), View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            childView.layout(0, 0, childView.getMeasuredWidth(), childView.getMeasuredHeight());
-            childView.setDrawingCacheEnabled(true);
-            childView.buildDrawingCache();
-
-            bmps.add(childView.getDrawingCache());
-            allitemsheight += childView.getMeasuredHeight();
-            //这里可以把listview中单独的item进行保存
-//            viewSaveToImage(childView.getDrawingCache());
-        }
-        int w = listview.getMeasuredWidth();
-        Bitmap bigbitmap = Bitmap.createBitmap(w, allitemsheight, Bitmap.Config.ARGB_8888);
-        Canvas bigcanvas = new Canvas(bigbitmap);
-
-        Paint paint = new Paint();
-        int iHeight = 0;
-
-        for (int i = 0; i < bmps.size(); i++) {
-            Bitmap bmp = bmps.get(i);
-            bigcanvas.drawBitmap(bmp, 0, iHeight, paint);
-            iHeight += bmp.getHeight();
-
-            bmp.recycle();
-            bmp = null;
-        }
-        return bigbitmap;
+    public static boolean isFullScreen(@NonNull final Activity activity) {
+        int fullScreenFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        return (activity.getWindow().getAttributes().flags & fullScreenFlag) == fullScreenFlag;
     }
 
     /**
-     * recycleview截图
-     * @param view
+     * 设置屏幕为横屏
+     * @param activity
+     */
+    public static void setLandscape(@NonNull final Activity activity) {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    /**
+     * 设置屏幕为竖屏
+     * @param activity
+     */
+    public static void setPortrait(@NonNull final Activity activity) {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    /**
+     * 判断是否横屏
      * @return
      */
-    public static Bitmap shotRecyclerView(RecyclerView view) {
-        RecyclerView.Adapter adapter = view.getAdapter();
-        Bitmap bigBitmap = null;
-        if (adapter != null) {
-            int size = adapter.getItemCount();
-            int height = 0;
-            Paint paint = new Paint();
-            int iHeight = 0;
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-            // Use 1/8th of the available memory for this memory cache.
-            final int cacheSize = maxMemory / 8;
-            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
-            for (int i = 0; i < size; i++) {
-                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-                adapter.onBindViewHolder(holder, i);
-                holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                        holder.itemView.getMeasuredHeight());
-                holder.itemView.setDrawingCacheEnabled(true);
-                holder.itemView.buildDrawingCache();
-                Bitmap drawingCache = holder.itemView.getDrawingCache();
-                if (drawingCache != null) {
-
-                    bitmaCache.put(String.valueOf(i), drawingCache);
-                }
-                height += holder.itemView.getMeasuredHeight();
-            }
-
-            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
-            Canvas bigCanvas = new Canvas(bigBitmap);
-            Drawable lBackground = view.getBackground();
-            if (lBackground instanceof ColorDrawable) {
-                ColorDrawable lColorDrawable = (ColorDrawable) lBackground;
-                int lColor = lColorDrawable.getColor();
-                bigCanvas.drawColor(lColor);
-            }
-
-            for (int i = 0; i < size; i++) {
-                Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
-                iHeight += bitmap.getHeight();
-                bitmap.recycle();
-            }
-        }
-        return bigBitmap;
+    public static boolean isLandscape() {
+        return Utils.getApp().getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     /**
-     * view转bitmap
+     * 判断是否竖屏
+     * @return
      */
-    public Bitmap viewConversionBitmap(View v) {
-        int w = v.getWidth();
-        int h = v.getHeight();
+    public static boolean isPortrait() {
+        return Utils.getApp().getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_PORTRAIT;
+    }
 
-        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bmp);
+    /**
+     * 获取屏幕旋转角度
+     * @param activity
+     * @return
+     */
+    public static int getScreenRotation(@NonNull final Activity activity) {
+        switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
+            case Surface.ROTATION_0:
+                return 0;
+            case Surface.ROTATION_90:
+                return 90;
+            case Surface.ROTATION_180:
+                return 180;
+            case Surface.ROTATION_270:
+                return 270;
+            default:
+                return 0;
+        }
+    }
 
-        c.drawColor(Color.WHITE);
-        /** 如果不设置canvas画布为白色，则生成透明 */
 
-        v.layout(0, 0, w, h);
-        v.draw(c);
+    /**
+     * 判断是否锁屏
+     * @return
+     */
+    public static boolean isScreenLock() {
+        KeyguardManager km =
+                (KeyguardManager) Utils.getApp().getSystemService(Context.KEYGUARD_SERVICE);
+        //noinspection ConstantConditions
+        return km.inKeyguardRestrictedInputMode();
+    }
 
-        return bmp;
+    /**
+     * 设置进入休眠时长
+     * @param duration
+     */
+    @RequiresPermission(WRITE_SETTINGS)
+    public static void setSleepDuration(final int duration) {
+        Settings.System.putInt(
+                Utils.getApp().getContentResolver(),
+                Settings.System.SCREEN_OFF_TIMEOUT,
+                duration
+        );
+    }
+
+    /**
+     *  获取进入休眠时长
+     * @return
+     */
+    public static int getSleepDuration() {
+        try {
+            return Settings.System.getInt(
+                    Utils.getApp().getContentResolver(),
+                    Settings.System.SCREEN_OFF_TIMEOUT
+            );
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            return -123;
+        }
+    }
+
+    /**
+     * 判断是否是平板
+     * @return
+     */
+    public static boolean isTablet() {
+        return (Utils.getApp().getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+    /**
+     * 适配垂直滑动的屏幕
+     * @param activity
+     * @param designWidthInPx
+     */
+    public static void adaptScreen4VerticalSlide(final Activity activity,
+                                                 final int designWidthInPx) {
+        adaptScreen(activity, designWidthInPx, true);
+    }
+
+    /**
+     * 适配水平滑动的屏幕
+     * @param activity
+     * @param designHeightInPx
+     */
+    public static void adaptScreen4HorizontalSlide(final Activity activity,
+                                                   final int designHeightInPx) {
+        adaptScreen(activity, designHeightInPx, false);
+    }
+
+    /**
+     * Reference from: https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
+     */
+    private static void adaptScreen(final Activity activity,
+                                    final int sizeInPx,
+                                    final boolean isVerticalSlide) {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = Utils.getApp().getResources().getDisplayMetrics();
+        final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
+        if (isVerticalSlide) {
+            activityDm.density = activityDm.widthPixels / (float) sizeInPx;
+        } else {
+            activityDm.density = activityDm.heightPixels / (float) sizeInPx;
+        }
+        activityDm.scaledDensity = activityDm.density * (systemDm.scaledDensity / systemDm.density);
+        activityDm.densityDpi = (int) (160 * activityDm.density);
+
+        appDm.density = activityDm.density;
+        appDm.scaledDensity = activityDm.scaledDensity;
+        appDm.densityDpi = activityDm.densityDpi;
+
+        Utils.ADAPT_SCREEN_ARGS.sizeInPx = sizeInPx;
+        Utils.ADAPT_SCREEN_ARGS.isVerticalSlide = isVerticalSlide;
+    }
+
+    /**
+     * 适配屏幕
+     * Reference from: https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
+     * @param activity
+     */
+    public static void cancelAdaptScreen(final Activity activity) {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = Utils.getApp().getResources().getDisplayMetrics();
+        final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
+        activityDm.density = systemDm.density;
+        activityDm.scaledDensity = systemDm.scaledDensity;
+        activityDm.densityDpi = systemDm.densityDpi;
+
+        appDm.density = systemDm.density;
+        appDm.scaledDensity = systemDm.scaledDensity;
+        appDm.densityDpi = systemDm.densityDpi;
+    }
+
+    /**
+     * 取消适配屏幕
+     */
+    public static void cancelAdaptScreen() {
+        Utils.cancelAdaptScreen();
+    }
+
+    /**
+     * 恢复适配屏幕
+     */
+    public static void restoreAdaptScreen() {
+        Utils.restoreAdaptScreen();
+    }
+
+    /**
+     * 是否适配屏幕
+     * @return
+     */
+    public static boolean isAdaptScreen() {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = Utils.getApp().getResources().getDisplayMetrics();
+        return systemDm.density != appDm.density;
     }
 }

@@ -7,7 +7,7 @@ import android.widget.Toast;
  * 吐司工具类
  */
 
-public class TUtil {
+public class ToastUtil {
     /**
      * 短时间吐司
      *

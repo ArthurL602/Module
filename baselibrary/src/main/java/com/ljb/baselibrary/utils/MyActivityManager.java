@@ -8,23 +8,23 @@ import java.util.Stack;
 *  Date        :2018/7/24
 *  Description :
 */
-public class ActivityManager {
+public class MyActivityManager {
 
-    private static volatile ActivityManager sActivityManager;
+    private static volatile MyActivityManager sMyActivityManager;
     private Stack<Activity> mActivities;
 
-    public static ActivityManager getInstance() {
-        if (sActivityManager == null) {
-            synchronized (ActivityManager.class) {
-                if (sActivityManager == null) {
-                    sActivityManager = new ActivityManager();
+    public static MyActivityManager getInstance() {
+        if (sMyActivityManager == null) {
+            synchronized (MyActivityManager.class) {
+                if (sMyActivityManager == null) {
+                    sMyActivityManager = new MyActivityManager();
                 }
             }
         }
-        return sActivityManager;
+        return sMyActivityManager;
     }
 
-    private ActivityManager() {
+    private MyActivityManager() {
         mActivities = new Stack<>();
     }
 
