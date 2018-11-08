@@ -1,8 +1,9 @@
 package com.ljb.module;
 
+import android.database.Observable;
+
 import com.ljb.baselibrary.network.bean.BaseResult;
 
-import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

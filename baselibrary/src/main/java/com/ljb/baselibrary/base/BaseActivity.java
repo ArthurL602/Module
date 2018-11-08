@@ -1,13 +1,17 @@
 package com.ljb.baselibrary.base;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -81,12 +85,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivityForResult(clazz, requestCode, null);
     }
 
+
+
+
+    @SuppressLint({ "RestrictedApi"})
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void startActivityForResult(Class<?> clazz, int requestCode, Bundle bundle) {
         Intent intent = new Intent(this, clazz);
         if(bundle!=null){
             intent.putExtras(bundle);
         }
-        startActivityForResult(clazz, requestCode, bundle);
+        startActivityForResult(intent, requestCode, bundle);
     }
 
     protected <T extends View> T viewById(@IdRes int viewId) {

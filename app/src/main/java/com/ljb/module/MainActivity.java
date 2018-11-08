@@ -87,32 +87,32 @@ HttpUtils.with().get().url("http://www.baidu.com").execute(new JsonListCallBack<
     }
 
     private void f() {
-        RxHttpUtils.with()//
-                .addBaseUrl("bb", "http://pic1.win4000.com")//
-                .create(ApiService.class)//
-                .a()//
-                .compose(RxHelper.<ResponseBody>transformer())//
-                .subscribe(new Observer<ResponseBody>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull ResponseBody responseBody) {
-
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+//        RxHttpUtils.with()//
+//                .addBaseUrl("bb", "http://pic1.win4000.com")//
+//                .create(ApiService.class)//
+//                .a()//
+//                .compose(RxHelper.<ResponseBody>transformer())//
+//                .subscribe(new Observer<ResponseBody>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull ResponseBody responseBody) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
     }
 
     private void d() {

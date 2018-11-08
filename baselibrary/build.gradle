@@ -82,5 +82,5 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.70.android'
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support:support-annotations:26.1.0'
-    compile 'net.danlew:android.joda:2.9.5'
+//    compile 'net.danlew:android.joda:2.9.5'
 }
