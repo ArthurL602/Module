@@ -409,19 +409,25 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseRvViewHo
      * @param data
      */
     public void addMoreData(@NonNull List<T> data) {
-        int size = mDatas.size();
+        int position = mDatas.size();
         mDatas.addAll(data);
-        notifyItemInserted(size);
+        notifyItemInserted(position);//通知演示插入动画
+        if (position != mDatas.size()) {
+            notifyItemRangeChanged(position, mDatas.size() - position);//通知数据与界面重新绑定
+        }
     }
 
     /**
      * 删除某个位置的数据
      *
-     * @param positon
+     * @param position
      */
-    public void removeData(int positon) {
-        mDatas.remove(positon);
-        notifyItemRemoved(positon);
+    public void removeData(int position) {
+        mDatas.remove(position);
+        notifyItemRemoved(position);//通知演示删减动画
+        if (position != mDatas.size()) {
+            notifyItemRangeChanged(position, mDatas.size() - position);//通知数据与界面重新绑定
+        }
     }
 
     /**
@@ -459,7 +465,7 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseRvViewHo
                         mLoadMoreListener.onLoadMore();
                     }
                 }
-                if ( mEnableEndLoadMore &&mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_END) {
+                if (mEnableEndLoadMore && mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_END) {
                     if (mLoadMoreListener != null) {
                         mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_LOADING);
                         notifyItemChanged(getItemCount() - 1);
