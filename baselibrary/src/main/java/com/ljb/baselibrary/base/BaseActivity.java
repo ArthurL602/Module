@@ -176,7 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return new BaseDialog.Builder(this)//
                 .setContentView(layoutId)//
                 .setCancelable(false)//
-                .setWidthAndHeight((int) (w),//
+                .setWidthAndHeight(w,//
                         WindowManager.LayoutParams.WRAP_CONTENT).setCancelable(false)//
                 .create();
     }
