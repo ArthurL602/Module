@@ -167,14 +167,19 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return
      */
     protected BaseDialog createDialog(int layoutId, float width) {
+        int w;
+        if (width == 0) {
+            w = WindowManager.LayoutParams.WRAP_CONTENT;
+        } else {
+            w = (int) (getResources().getDisplayMetrics().widthPixels * width);
+        }
         return new BaseDialog.Builder(this)//
                 .setContentView(layoutId)//
                 .setCancelable(false)//
-                .setWidthAndHeight((int) (getResources().getDisplayMetrics().widthPixels * width),//
+                .setWidthAndHeight((int) (w),//
                         WindowManager.LayoutParams.WRAP_CONTENT).setCancelable(false)//
                 .create();
     }
-
     protected void dismissDialog(Dialog dialog) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
