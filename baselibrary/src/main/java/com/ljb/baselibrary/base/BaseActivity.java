@@ -1,11 +1,8 @@
 package com.ljb.baselibrary.base;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
@@ -87,17 +84,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivityForResult(clazz, requestCode, null);
     }
 
-
-
-
-    @SuppressLint({ "RestrictedApi"})
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void startActivityForResult(Class<?> clazz, int requestCode, Bundle bundle) {
         Intent intent = new Intent(this, clazz);
         if(bundle!=null){
             intent.putExtras(bundle);
         }
-        startActivityForResult(intent, requestCode, bundle);
+        startActivityForResult(clazz, requestCode, bundle);
     }
 
     protected <T extends View> T viewById(@IdRes int viewId) {
