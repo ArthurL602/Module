@@ -22,7 +22,7 @@ public class InstallUitls {
      * @param context
      * @param apkFile
      */
-    public static void installApkAll(Context context, File apkFile) {
+    public static void installApkAll(Context context, File apkFile,int requestCode) {
         if (context == null || apkFile == null) {
             return;
         }
@@ -32,7 +32,7 @@ public class InstallUitls {
                 installApk(context, apkFile);
             }else{
                 if(context instanceof Activity){
-                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, 10010);
+                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, requestCode);
                 }
             }
         } else {

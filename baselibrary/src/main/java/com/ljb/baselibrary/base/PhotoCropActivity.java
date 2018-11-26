@@ -21,7 +21,7 @@ import io.reactivex.functions.Consumer;
 /**
  * Author      :meloon
  * Date        :2018/11/26
- * Description :
+ * Description : 拍照、剪辑、相册一体的activity
  */
 public abstract class PhotoCropActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1; // 拍照
