@@ -119,32 +119,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         mCurrentFragment =  targetFragment;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-            grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch(requestCode){
-            case 10010:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    InstallUitls.installApkAll(this, null);
-                } else {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                    startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
-                }
-            break;
-        }
-
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case GET_UNKNOWN_APP_SOURCES:
-                InstallUitls.installApkAll(this, null);
-                break;
-        }
-
-    }
 
     protected void showDialog(Dialog dialog) {
         if (dialog != null && !dialog.isShowing()) {
