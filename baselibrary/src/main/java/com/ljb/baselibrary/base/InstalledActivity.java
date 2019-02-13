@@ -2,6 +2,7 @@ package com.ljb.baselibrary.base;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import java.io.File;
  * Author      :ljb
  * Date        :2018/11/26
  * Description : 安装的activity
+ *
+ *  适配 8.0 需要加权限：<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
  */
 public class InstalledActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_INSTALLED = 5;
@@ -35,7 +38,8 @@ public class InstalledActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     InstallUitls.installApkAll(InstalledActivity.this, mFile, REQUEST_CODE_INSTALLED);
                 } else {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                    Uri packageURI = Uri.parse("package:"+getPackageName());
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,packageURI);
                     startActivityForResult(intent, REQUEST_CODE_UNKNOWN_APP_SOURCES);
                 }
                 break;
