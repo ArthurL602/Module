@@ -82,6 +82,11 @@ public class NotificationUtils {
         }
         return false;
     }
+    /**
+     * 两个检测悬浮窗权限的地址
+     * https://github.com/zhaozepeng/FloatWindowPermission
+     * https://github.com/czy1121/settingscompat
+     */
 
     /**
      * 8.0 以上判断是否开启通知权限
