@@ -107,10 +107,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if(targetFragment.isAdded()){
-            transaction.hide(targetFragment).show(targetFragment);
+            transaction.hide(mCurrentFragment).show(targetFragment);
         }else{
             // 0 为 控件ID
-            transaction.hide(targetFragment).add(0,targetFragment);
+            transaction.hide(mCurrentFragment).add(0,targetFragment);
         }
         if(addToBackTask){
             transaction.addToBackStack(null);
