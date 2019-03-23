@@ -9,6 +9,8 @@ package com.ljb.baselibrary.storagefactory;
 public class IOHandlerFactory {
 public  static  volatile IOHandlerFactory sIOHandlerFactory;
 
+private IOHandler mMemoryIoHandler,mDiskLruIOHandler;
+
     public static IOHandlerFactory get(){
         if(sIOHandlerFactory==null){
             synchronized (IOHandlerFactory.class){
@@ -36,7 +38,10 @@ public  static  volatile IOHandlerFactory sIOHandlerFactory;
      * @return
      */
     public IOHandler createMemoryIOHandler(){
-        return create(MemoryIOHandler.class);
+        if (mMemoryIoHandler==null) {
+            mMemoryIoHandler=create(MemoryIOHandler.class);
+        }
+        return mMemoryIoHandler;
     }
 
     /**
@@ -44,7 +49,10 @@ public  static  volatile IOHandlerFactory sIOHandlerFactory;
      * @return
      */
     public IOHandler createDiskIOHandler(){
-        return create(DiskLruIOHandler.class);
+        if (mDiskLruIOHandler==null) {
+            mDiskLruIOHandler=create(DiskLruIOHandler.class);
+        }
+        return mDiskLruIOHandler;
     }
 
     /**
@@ -52,6 +60,9 @@ public  static  volatile IOHandlerFactory sIOHandlerFactory;
      * @return
      */
     public IOHandler creaetDefaultIOHandler(){
-        return createMemoryIOHandler();
+        if (mMemoryIoHandler==null) {
+            mMemoryIoHandler=create(MemoryIOHandler.class);
+        }
+        return mMemoryIoHandler;
     }
 }
