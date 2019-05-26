@@ -1,1 +1,1 @@
-include ':app', ':baselibrary', ':framelibrary',':ucrop'
+include ':app', ':net', ':ui', ':db', ':storage', ':utils', ':common', ':fix'

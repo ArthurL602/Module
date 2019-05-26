@@ -2,7 +2,8 @@ package com.ljb.module;
 
 import android.database.Observable;
 
-import com.ljb.baselibrary.network.bean.BaseResult;
+
+import com.ljb.netmodule.network.bean.BaseResult;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;

@@ -1,24 +1,18 @@
 package com.ljb.module;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ljb.baselibrary.navigationbar.NavigationBar;
-import com.ljb.baselibrary.network.okhttp.ExMultipartBody;
-import com.ljb.baselibrary.network.okhttp.HttpUtils;
-import com.ljb.baselibrary.network.okhttp.callback.DownCallBack;
-import com.ljb.baselibrary.network.okhttp.callback.JsonCallBack;
-import com.ljb.baselibrary.network.okhttp.callback.JsonListCallBack;
-import com.ljb.baselibrary.network.okhttp.callback.StringCallBack;
-import com.ljb.baselibrary.network.okhttp.callback.UploadCallBack;
-import com.ljb.baselibrary.network.okhttp.intercepter.CacheInterceptor;
-import com.ljb.baselibrary.network.okhttp.intercepter.NetWorkCacheInterceptor;
-import com.ljb.baselibrary.network.retrofit.RxHelper;
-import com.ljb.baselibrary.network.retrofit.RxHttpUtils;
+import com.ljb.netmodule.network.okhttp.ExMultipartBody;
+import com.ljb.netmodule.network.okhttp.HttpUtils;
+import com.ljb.netmodule.network.okhttp.callback.DownCallBack;
+import com.ljb.netmodule.network.okhttp.callback.JsonCallBack;
+import com.ljb.netmodule.network.okhttp.callback.JsonListCallBack;
+import com.ljb.netmodule.network.okhttp.callback.UploadCallBack;
+import com.ljb.netmodule.network.okhttp.intercepter.CacheInterceptor;
+import com.ljb.netmodule.network.okhttp.intercepter.NetWorkCacheInterceptor;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observer;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
+
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Call;
@@ -42,10 +34,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     //    private String url = "http://192.168.199.187:8080/OkHttpServlet/LoginServlet";
     //    private String url = "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk";
     private String url = "http://pic1.win4000.com/wallpaper/e/584a7f69e9d4d.jpg";
@@ -55,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 //        ViewGroup paren = (ViewGroup) findViewById(R.id.root);
 //        NavigationBar navigationBar = new NavigationBar.Builder(this,R.layout.layout_tool,paren)//
 //                .setText(R.id.tv_title,"我的标题")//
@@ -121,7 +113,7 @@ HttpUtils.with().get().url("http://www.baidu.com").execute(new JsonListCallBack<
                 .maxStale(60, TimeUnit.SECONDS)//
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient.Builder()//
-                .cache(new Cache(getCacheDir(), 1024 * 1024810))//
+                .cache(new Cache(this.getCacheDir(), 1024 * 1024810))//
                 .addInterceptor(new CacheInterceptor(this))//
                 .addNetworkInterceptor(new NetWorkCacheInterceptor(this))//
                 .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {

@@ -2,7 +2,7 @@ package com.ljb.module.db;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ljb.baselibrary.db.UpgradeSupport;
+import com.ljb.db.db.UpgradeSupport;
 
 /**
  * Author      :meloon
