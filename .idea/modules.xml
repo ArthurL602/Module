@@ -5,22 +5,14 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/Module.iml" filepath="$PROJECT_DIR$/.idea/Module.iml" />
       <module fileurl="file://D:\ljb\Project\practice\Module\Module.iml" filepath="D:\ljb\Project\practice\Module\Module.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\app\app.iml" filepath="D:\ljb\Project\practice\Module\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/camera_lib/camera_lib.iml" filepath="$PROJECT_DIR$/camera_lib/camera_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\common\common.iml" filepath="D:\ljb\Project\practice\Module\common\common.iml" />
       <module fileurl="file://$PROJECT_DIR$/db/db.iml" filepath="$PROJECT_DIR$/db/db.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\db\db.iml" filepath="D:\ljb\Project\practice\Module\db\db.iml" />
       <module fileurl="file://$PROJECT_DIR$/fix/fix.iml" filepath="$PROJECT_DIR$/fix/fix.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\fix\fix.iml" filepath="D:\ljb\Project\practice\Module\fix\fix.iml" />
       <module fileurl="file://$PROJECT_DIR$/net/net.iml" filepath="$PROJECT_DIR$/net/net.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\net\net.iml" filepath="D:\ljb\Project\practice\Module\net\net.iml" />
       <module fileurl="file://$PROJECT_DIR$/storage/storage.iml" filepath="$PROJECT_DIR$/storage/storage.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\storage\storage.iml" filepath="D:\ljb\Project\practice\Module\storage\storage.iml" />
       <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\ui\ui.iml" filepath="D:\ljb\Project\practice\Module\ui\ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/utils/utils.iml" filepath="$PROJECT_DIR$/utils/utils.iml" />
-      <module fileurl="file://D:\ljb\Project\practice\Module\utils\utils.iml" filepath="D:\ljb\Project\practice\Module\utils\utils.iml" />
     </modules>
   </component>
 </project>
