@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">camera</string>
+    <string name="topic_camera_takephoto_failure">拍照竟然失败了！</string>
+</resources>

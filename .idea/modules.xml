@@ -6,6 +6,7 @@
       <module fileurl="file://D:\ljb\Project\practice\Module\Module.iml" filepath="D:\ljb\Project\practice\Module\Module.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://D:\ljb\Project\practice\Module\app\app.iml" filepath="D:\ljb\Project\practice\Module\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camera_lib/camera_lib.iml" filepath="$PROJECT_DIR$/camera_lib/camera_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://D:\ljb\Project\practice\Module\common\common.iml" filepath="D:\ljb\Project\practice\Module\common\common.iml" />
       <module fileurl="file://$PROJECT_DIR$/db/db.iml" filepath="$PROJECT_DIR$/db/db.iml" />

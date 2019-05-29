@@ -33,6 +33,7 @@ dependencies {
     implementation project(':storage')
     implementation project(':ui')
     implementation project(':utils')
+    implementation project(':camera_lib')
 }
 configurations.all {
     resolutionStrategy {

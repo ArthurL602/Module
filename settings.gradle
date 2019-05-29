@@ -1,1 +1,1 @@
-include ':app', ':net', ':ui', ':db', ':storage', ':utils', ':common', ':fix'
+include ':app', ':net', ':ui', ':db', ':storage', ':utils', ':common', ':fix', ':camera_lib'
