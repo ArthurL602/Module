@@ -32,7 +32,8 @@ public class InstallUitls {
                 installApk(context, apkFile);
             }else{
                 if(context instanceof Activity){
-                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, requestCode);
+                   // ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, requestCode);
+                    startInstallPermissionSettingActivity(context);
                 }
             }
         } else {
@@ -53,6 +54,30 @@ public class InstallUitls {
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
         }
         context.startActivity(intent);
+    }
+    
+        /**
+     * 开启设置安装未知来源应用权限界面
+     * @param context
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startInstallPermissionSettingActivity(Context context) {
+        if (context == null) {
+            return;
+        }
+        Intent intent = new Intent();
+        //获取当前apk包URI，并设置到intent中（这一步设置，可让“未知应用权限设置界面”只显示当前应用的设置项）
+        Uri packageURI = Uri.parse("package:" + context.getPackageName());
+        intent.setData(packageURI);
+        //设置不同版本跳转未知应用的动作
+        if (Build.VERSION.SDK_INT >= 26) {
+            //intent = new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,packageURI);
+            intent.setAction(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+        } else {
+            intent.setAction(android.provider.Settings.ACTION_SECURITY_SETTINGS);
+        }
+        ((Activity) context).startActivityForResult(intent,requestCode);
+        Toast.makeText(this, "请打开未知应用安装权限", Toast.LENGTH_SHORT).show();
     }
 
 }
